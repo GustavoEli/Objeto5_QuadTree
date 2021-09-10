@@ -69,7 +69,7 @@ public class Particle {
         //g.fillOval((int)this.bv.left, (int)this.bv.top, (int)this.bv.getWidth(), (int)this.bv.getHeight());
         g.fillRect((int)this.bv.left, (int)this.bv.top, (int)this.bv.getWidth(), (int)this.bv.getHeight());
         
-        //this.isColliding = false;
+        this.isColliding = false;
     }
     
 }
