@@ -27,9 +27,9 @@ public class Particle {
     public void setPos(float x, float y)
     {
         if (x < 0) x = 0;
-	    if (y < 0) y = 0;
-	    if (x > Main.WIDTH) x = Main.WIDTH;
-	    if (y > Main.HEIGHT) y = Main.HEIGHT;
+	if (y < 0) y = 0;
+	if (x > Main.WIDTH) x = Main.WIDTH;
+	if (y > Main.HEIGHT) y = Main.HEIGHT;
         
         this.posX = x;
         this.posY = y;
