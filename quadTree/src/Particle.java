@@ -34,9 +34,16 @@ public class Particle {
         this.bv.bottom = y + SIZE;
     }
     
+    private void move(float x, float y)
+    {
+        setPos(this.posX + x, this.posY + y);
+    }
+    
     public void update()
     {
-        //
+        float x = (float)( Math.random() - 0.5f );
+        float y = (float)( Math.random() - 0.5f );
+        move(x, y);
     }
     
     public void onCollision()
