@@ -26,6 +26,11 @@ public class Particle {
     
     public void setPos(float x, float y)
     {
+        if (x < 0) x = 0;
+	    if (y < 0) y = 0;
+	    if (x > Main.WIDTH) x = Main.WIDTH;
+	    if (y > Main.HEIGHT) y = Main.HEIGHT;
+        
         this.posX = x;
         this.posY = y;
         this.bv.left = x - SIZE;
@@ -41,8 +46,8 @@ public class Particle {
     
     public void update()
     {
-        float x = (float)( Math.random() - 0.5f );
-        float y = (float)( Math.random() - 0.5f );
+        float x = (float)( Math.random() - 0.5f ) * 3;
+        float y = (float)( Math.random() - 0.5f ) * 3;
         move(x, y);
     }
     
