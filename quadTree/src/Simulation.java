@@ -30,7 +30,7 @@ public class Simulation extends Thread {
         {
             int x = rand.nextInt(Main.WIDTH);
             int y = rand.nextInt(Main.HEIGHT);
-            Particle p = new Particle(x, y, false);
+            Particle p = new Particle(x, y);
             this.objs[i] = p;
             this.bvs[i] = p.bv;
         }
@@ -49,7 +49,7 @@ public class Simulation extends Thread {
             Quadtree.build(this.bvs);
             
             // testes percorrendo toda a Quadtree.
-            Quadtree.simulateCollisions();
+            Quadtree.checkAllCollisions();
             
             // testes por busca na quadtree
             /*for (Particle p : this.objs)

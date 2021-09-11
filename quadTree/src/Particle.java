@@ -12,44 +12,42 @@ public class Particle {
     
     public BoundingVolume bv;
     public float posX, posY;
-    public boolean isDinamic;
     public boolean isColliding;
     
-    public Particle(float x, float y, boolean isDinamic)
+    public Particle(float x, float y)
     {
         this.posX = x;
         this.posY = y;
         this.bv = new BoundingVolume(x - SIZE, y - SIZE, x + SIZE, y + SIZE);
         this.bv.particle = this;
-        this.isDinamic = isDinamic;
     }
     
-    public void setPos(float x, float y)
+    public void setPos(float posX, float posY)
     {
-        if (x < 0) x = 0;
-	if (y < 0) y = 0;
-	if (x > Main.WIDTH) x = Main.WIDTH;
-	if (y > Main.HEIGHT) y = Main.HEIGHT;
+        if (posX < 0) posX = 0;
+	if (posY < 0) posY = 0;
+	if (posX > Main.WIDTH) posX = Main.WIDTH;
+	if (posY > Main.HEIGHT) posY = Main.HEIGHT;
         
-        this.posX = x;
-        this.posY = y;
-        this.bv.left = x - SIZE;
-        this.bv.top = y - SIZE;
-        this.bv.right = x + SIZE;
-        this.bv.bottom = y + SIZE;
+        this.posX = posX;
+        this.posY = posY;
+        this.bv.left = posX - SIZE;
+        this.bv.top = posY - SIZE;
+        this.bv.right = posX + SIZE;
+        this.bv.bottom = posY + SIZE;
     }
     
-    private void move(float x, float y)
+    private void move(float dirX, float dirY)
     {
-        setPos(this.posX + x, this.posY + y);
+        setPos(this.posX + dirX, this.posY + dirY);
     }
     
-    public void update(long elapsed)
+    public void update(long elapsedTime)
     {
         this.isColliding = false;
         
-        float x = (float)( Math.random() - 0.5f ) * elapsed;
-        float y = (float)( Math.random() - 0.5f ) * elapsed;
+        float x = (float)( Math.random() - 0.5f ) * elapsedTime;
+        float y = (float)( Math.random() - 0.5f ) * elapsedTime;
         move(x, y);
     }
     

@@ -7,6 +7,7 @@ import java.util.LinkedList;
  */
 public class Quadtree {
     
+    // determina a profundidade máxima da árvore.
     public static final int MIN_SPLIT = 5;
     private static int MIN_SIZE;
     
@@ -26,24 +27,43 @@ public class Quadtree {
     public Quadtree[] children;
     
     // retorna true se este nó for folha.
+    /**
+     * Retorna a condição de "folha" do nó.
+     * @return <code>true</code> se houver objetos armazenados no nó ou <code>false</code> se não houver.
+     */
     public boolean isLeaf()
     {
         return (leafs != null && leafs.size() > 0);
     }
     
+    /**
+     * Instancia um novo nó na <code>Quadtree</code>.
+     * @param l limite esquerdo do nó.
+     * @param t limite superior do nó.
+     * @param r limite direito do nó.
+     * @param b limite inferior do nó.
+     */
     private Quadtree(float l, float t, float r, float b)
     {
         // cria o BV deste nó.
         this.bv = new BoundingVolume(l, t, r, b);
     }
     
-    // testa intersecção com este nó da Quadtree.
+    /**
+     * Testa a intersecção deste nó com {@code other}.
+     * @param other o outro volume a ser testado contra este nó.
+     * @return retorna <code>true</code> se houver intersecção ou <code>false</code>.
+     */
     public boolean intersects(BoundingVolume other)
     {
         return this.bv.intersects(other);
     }
     
-    // constroi a Quadtree com os objetos passados.
+    /**
+     * Constroi a <code>Quadtree</code> com os {@code objs} passados.
+     * @param objs Coleção de objetos a serem inseridos na <code>Quadtree</code>.
+     * @return Retorna a instância do Singleton da classe.
+     */
     public static Quadtree build(BoundingVolume[] objs)
     {
         if (_get == null){
@@ -63,7 +83,10 @@ public class Quadtree {
         return _get;
     }
     
-    // adiciona objetos a Quadtree.
+    /**
+     * Adiciona um novo objeto a <code>Quadtree</code>.
+     * @param bv <code>BoundingVolume</code> a ser inserido.
+     */
     public void add(BoundingVolume bv)
     {
         if (this.bv == bv)
@@ -134,6 +157,10 @@ public class Quadtree {
     }
     
     // verifica se o BV passado colide com algum objeto contido.
+    /**
+     * Verifica se o <code>BoundingVolume</code> passado colide com algum objeto contido.
+     * @param bv <code>BoundingVolume</code> a ser testado.
+     */
     public void checkCollision(BoundingVolume bv)
     {
         if (!bv.intersects(this.bv))
@@ -158,11 +185,14 @@ public class Quadtree {
         }
     }
     
-    // Testa todas as colisões entre objetos contidos na Quadtree passada.
-    // Percorre toda a arvore e testa colisão entre os objetos dentro de um
-    // mesmo nó folha.
-    public void simulateCollisions(Quadtree _this)
+    /**
+     * Testa todas as colisões entre objetos contidos na <code>Quadtree</code> passada.
+     * Percorre toda a arvore e testa colisão entre os objetos dentro de um mesmo nó folha.
+     * @param _this <code>Quadtree</code> a ser testada.
+     */
+    public void checkAllCollisions(Quadtree _this)
     {
+        // Se este é um nó folha, checar colisões dos objetos contidos.
         if (_this.isLeaf())
         {
             for (BoundingVolume bv1 : _this.leafs)
@@ -177,18 +207,27 @@ public class Quadtree {
                 }
             }
         }
+        // Se não é folha, prosseguir para os nós filhos, se houver.
         else if (_this.children != null)
         {
             for (Quadtree c : _this.children)
-                simulateCollisions(c);
+                checkAllCollisions(c);
         }
     }
-    public static void simulateCollisions()
+    // Forma simplificada de chamar a função acima.
+    /**
+     * Testa todas as colisões entre objetos contidos na <code>Quadtree</code>.
+     * Percorre toda a arvore e testa colisão entre os objetos dentro de um mesmo nó folha.
+     */
+    public static void checkAllCollisions()
     {
-        _get.simulateCollisions(_get);
+        _get.checkAllCollisions(_get);
     }
     
-    // Desenha os BVs das Quads na árvore.
+    /**
+     * Desenha os <code>BoundingVolume</code>s que delimitam os nós da <code>Quadtree</code>.
+     * @param g Contexto gráfico utilizado pelo Java Swing.
+     */
     public void draw(Graphics g)
     {
         this.bv.draw(g);
