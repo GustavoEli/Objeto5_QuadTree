@@ -44,10 +44,12 @@ public class Particle {
         setPos(this.posX + x, this.posY + y);
     }
     
-    public void update()
+    public void update(long elapsed)
     {
-        float x = (float)( Math.random() - 0.5f ) * 3;
-        float y = (float)( Math.random() - 0.5f ) * 3;
+        this.isColliding = false;
+        
+        float x = (float)( Math.random() - 0.5f ) * elapsed;
+        float y = (float)( Math.random() - 0.5f ) * elapsed;
         move(x, y);
     }
     
@@ -64,12 +66,8 @@ public class Particle {
         else
             c = Color.blue;
         
-        //draw
         g.setColor(c);
-        //g.fillOval((int)this.bv.left, (int)this.bv.top, (int)this.bv.getWidth(), (int)this.bv.getHeight());
         g.fillRect((int)this.bv.left, (int)this.bv.top, (int)this.bv.getWidth(), (int)this.bv.getHeight());
-        
-        this.isColliding = false;
     }
     
 }

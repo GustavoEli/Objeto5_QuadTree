@@ -1,37 +1,35 @@
 import java.awt.Dimension;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.awt.EventQueue;
 import javax.swing.JFrame;
 
-public class Main {
+public class Main extends JFrame {
+    
+    public static Main get;
 
-    public static final int WIDTH = 800;
-    public static final int HEIGHT = 600;
+    public static final int WIDTH = 1024;
+    public static final int HEIGHT = 720;
     public static String TYPE;
-
-    public static JFrame frame;
     
-    public static void main(String[] args) {
-    
+    public Main()
+    {
+        get = this;
+        
         TYPE = Simulation.TOOGLE_QUADTREE ? "usando Quadtree" : "sem Quadtree";
-        frame = new JFrame("Teste de colisão " + TYPE);
-        frame.setResizable(false);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //frame.setLayout(null);
+        setTitle("Teste de colisão " + TYPE);
+        setResizable(false);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         Board board = new Board(WIDTH, HEIGHT);
-        frame.add(board);
-        //board.setLocation(0, 0);
-        frame.getContentPane().setPreferredSize(new Dimension(WIDTH, HEIGHT));
-        frame.pack();
-        frame.setVisible(true);
-        
-        // simulação
-        Simulation.get().start();
-        try {
-            Simulation.get().join();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        add(board);
+        getContentPane().setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        pack();
+    }
+
+    public static void main(String[] args) {
+    
+        EventQueue.invokeLater(() -> {
+            JFrame main = new Main();
+            main.setVisible(true);
+        });
     }
 }

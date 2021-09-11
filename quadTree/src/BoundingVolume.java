@@ -57,18 +57,7 @@ public class BoundingVolume {
     
     public void draw(Graphics g)
     {
-        /*if (this.particle == null)
-        {
-            //
-        }
-        else
-        {
-            //
-        }*/
-        
-        //draw
-        //Color c = new Color(0, 1, 0, 0.1f);
-        g.setColor(Color.GREEN);
+        g.setColor(Color.DARK_GRAY);
         g.drawRect((int)this.left, (int)this.top, (int)this.getWidth(), (int)this.getHeight());
     }
     

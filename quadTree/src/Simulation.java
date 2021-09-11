@@ -1,7 +1,5 @@
 import java.awt.Graphics;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Simulation extends Thread {
 
@@ -13,24 +11,17 @@ public class Simulation extends Thread {
         return _get;
     }
     
-    private final int COUNT = 500;
+    // quantidade de partículas na simulação
+    public final int COUNT = 500;
+    
+    // configura o uso ou não de Quadtree
     public static final boolean TOOGLE_QUADTREE = true;
-    private Quadtree quadtree;
+    
     private Particle[] objs;
     private BoundingVolume[] bvs;
     
-    private final int END_TIME = 10;
-    private long previousTime;
-    private long amountTime;
-    
     private Simulation()
     {
-        long previous = System.currentTimeMillis();
-        
-        if (TOOGLE_QUADTREE){
-            quadtree = Quadtree.get();
-        }
-        
         this.objs = new Particle[COUNT];
         this.bvs = new BoundingVolume[COUNT];
         Random rand = new Random();
@@ -42,82 +33,31 @@ public class Simulation extends Thread {
             Particle p = new Particle(x, y, false);
             this.objs[i] = p;
             this.bvs[i] = p.bv;
-            if (quadtree != null)
-                quadtree.add(p.bv);
         }
-        
-        /*if (TOOGLE_QUADTREE){
-            //quadtree = Quadtree.get();
-            quadtree = Quadtree.build(this.bvs);
-        }*/
-        
-        long after = System.currentTimeMillis();
-        System.out.println("Inicialização " + Main.TYPE + " com " + COUNT +
-                " objetos: " + (after - previous) + " milisegundos.");
     }
     
-    @Override public void run()
+    public void simulate(long elapsed)
     {
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        // atualização a posição das partículas
+        for (Particle p : this.objs)
+            p.update(elapsed);
         
-        int ticks = 0;
-        this.previousTime = System.currentTimeMillis();
-        while (amountTime < END_TIME * 1000) {
-            
-            ticks++;
-            long currentTime = System.currentTimeMillis();
-            long elapsed = currentTime - this.previousTime;
-            amountTime += elapsed;
-            this.previousTime = currentTime;
-            //System.out.println(amountTime / 1000);
-            
-            //
-            simulate();
-            
-            //
-            //Board.get.repaint();
-            
-            /*try {
-                Thread.sleep(1);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
-            }*/
-        }
-        Board.get.repaint();
-        //TODO: média performance
-        System.out.println("Teste " + Main.TYPE + " com " + COUNT + " objetos: Média de " + (amountTime / (float)ticks) + " milissegundos por frame.");
-    }
-    /*@Override public void run()
-    {
-        long previous = System.currentTimeMillis();
-        
-        simulate();
-        
-        long current = System.currentTimeMillis();
-        long elapsed = current - previous;
-        System.out.println("Teste " + Main.TYPE + " com " + COUNT + " objetos: " + elapsed + " milissegundos.");
-        
-        Board.get.repaint();
-    }*/
-    
-    private void simulate()
-    {
-        //TODO: percorrer this.objs e checar colisão utilizando quadtree com o método check
+        // testes de colisão utilizando Quadtree
         if (TOOGLE_QUADTREE)
         {
-            // testes por percurso na quadtree
-            quadtree.simulateCollisions(quadtree);
+            // reconstroi a Quadtree com as novas posições das partículas.
+            Quadtree.build(this.bvs);
+            
+            // testes percorrendo toda a Quadtree.
+            Quadtree.simulateCollisions();
             
             // testes por busca na quadtree
             /*for (Particle p : this.objs)
             {
-                quadtree.checkCollision(p.bv);
+                Quadtree.get().checkCollision(p.bv);
             }*/
         }
+        // testes de colisão sem Quadtree.
         else
         {
             // testes por busca padrão
@@ -139,10 +79,12 @@ public class Simulation extends Thread {
     
     public void draw(Graphics g)
     {
+        // desenha as partículas
         for (Particle p : this.objs)
             p.draw(g);
         
-        if (quadtree != null)
-            quadtree.draw(g);
+        // desenha os bounding volumes da Quadtree
+        if (Quadtree.get() != null)
+            Quadtree.get().draw(g);
     }    
 }
